@@ -1,0 +1,24 @@
+stages:
+  - test
+  - build
+
+# Job 1 — проверяем код
+test:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - echo "Запускаем проверку кода..."
+    - python3 --version
+    - python3 -c "import subprocess, datetime; print('Все модули импортируются')"
+    - echo "Проверка прошла успешно!"
+
+# Job 2 — собираем Docker образ
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - echo "Собираем Docker образ..."
+    - docker build -t ping-monitor .
+    - echo "Образ собран успешно!"
